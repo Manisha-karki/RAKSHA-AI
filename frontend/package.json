@@ -1,0 +1,14 @@
+{
+  "name": "distress-monitoring-mvp",
+  "version": "1.0.0",
+  "description": "MVP for AI-based dynamic mental health monitoring and distress prediction",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "google-auth-library": "^9.14.1",
+    "bcryptjs": "^2.4.3"
+  }
+}

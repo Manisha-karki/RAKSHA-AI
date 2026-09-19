@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>Victim Distress Monitoring MVP</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<!-- React, used only for the login screen -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+<!-- React login screen — shown until a valid token is in localStorage -->
+<div id="login-root"></div>
+
+<!-- Vanilla JS app — hidden until login succeeds -->
+<div id="app-root" style="display:none;">
+
+<div class="tabs">
+  <div class="tab active" id="tab-RAKSHA AI">RAKSHA AI</div>
+  <div class="tab" id="tab-dashboard">Dashboard</div>
+</div>
+
+<!-- Check-in view (now a chat interface) -->
+<div class="container" id="view-RAKSHA AI">
+  <div class="card chat-card" id="RAKSHA-card">
+
+    <!-- NEW: header with Clear chat button -->
+    <div class="chat-header">
+      <h2 class="chat-heading">How are you doing today?</h2>
+      <button type="button" id="chat-clear" class="chat-clear-btn">🗑 Clear chat</button>
+    </div>
+
+    <div id="chat-messages" class="chat-messages"></div>
+
+    <form id="chat-form" class="chat-input-row">
+      <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off" required />
+      <button type="button" id="chat-mic" class="chat-mic-btn" title="Speak your message">🎤</button>
+      <button type="submit">Send</button>
+    </form>
+
+  </div>
+</div>
+
+<!-- Dashboard view -->
+<div class="dashboard-layout" id="view-dashboard" style="display:none;">
+
+  <div class="sidebar">
+    <div class="sidebar-title">Distress Monitor</div>
+    <div class="sidebar-item active" data-panel="overview">📊 Dashboard</div>
+    <div class="sidebar-item" data-panel="cases">🗂️ Cases</div>
+    <div class="sidebar-item" data-panel="soon">🚨 Alerts</div>
+    <div class="sidebar-item" data-panel="soon">📄 Reports</div>
+    <div class="sidebar-item" data-panel="soon">⚙️ Settings</div>
+    <div class="sidebar-item" id="logout-btn" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.15); padding-top:16px;">🚪 Logout</div>
+  </div>
+
+  <div class="dashboard-main">
+
+    <!-- NEW: profile icon (top right of dashboard) -->
+    <div class="profile-wrap">
+      <button type="button" id="profile-btn" class="profile-btn" title="Profile"></button>
+      <div id="profile-menu" class="profile-menu" style="display:none;">
+        <div class="profile-name" id="profile-name"></div>
+        <div class="profile-email" id="profile-email"></div>
+        <button type="button" id="profile-logout">🚪 Logout</button>
+      </div>
+    </div>
+
+    <h2>Victim Distress Monitoring Dashboard</h2>
+    <p class="subtitle">Real-time view across all active cases</p>
+
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card">
+        <div class="stat-number" id="stat-total">0</div>
+        <div class="stat-label">Active Cases</div>
+      </div>
+      <div class="stat-card high">
+        <div class="stat-number" id="stat-high">0</div>
+        <div class="stat-label">High-Risk Cases</div>
+      </div>
+      <div class="stat-card escalated">
+        <div class="stat-number" id="stat-escalated">0</div>
+        <div class="stat-label">Escalated</div>
+      </div>
+      <div class="stat-card avg">
+        <div class="stat-number" id="stat-avg">0</div>
+        <div class="stat-label">Avg Distress Score</div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card">
+        <h3>Cases</h3>
+        <div class="filter-row">
+          <input type="text" id="case-search" placeholder="Search by case name..." />
+          <select id="risk-filter">
+            <option value="all">All risk levels</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <table class="case-table">
+          <thead>
+            <tr><th>Case ID</th><th>Channel</th><th>Score</th><th>Trend</th><th>Status</th></tr>
+          </thead>
+          <tbody id="case-table-body"></tbody>
+        </table>
+        <p id="no-results" style="display:none; color:#888; font-size:14px;">No cases match your search.</p>
+      </div>
+
+      <div class="card">
+        <h3>Risk Breakdown</h3>
+        <canvas id="risk-donut" height="220"></canvas>
+      </div>
+    </div>
+
+    <div class="card" id="detail-card" style="display:none;">
+      <h3 id="detail-title"></h3>
+      <canvas id="trend-chart" height="120"></canvas>
+      <p><strong>Why this score:</strong></p>
+      <ul class="explain-list" id="explain-list"></ul>
+      <button class="secondary" id="escalate-btn">Escalate to caseworker</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<script type="text/babel" src="login.js"></script>
+<script src="project.js"></script>
+<script src="chat.js"></script>
+</body>
+</html>
